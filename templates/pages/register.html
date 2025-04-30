@@ -9,7 +9,8 @@
 <div class="flex flex-col justify-center sm:h-screen p-4">
     <div class="max-w-md w-full mx-auto border border-slate-300 rounded-2xl p-8">
         <div class="text-center mb-6">
-            <img src="{{ url_for('static', filename='assets/logo_purple.svg') }}" class="w-60 inline-block" alt="Prime Creative Logo" />
+            <img src="{{ url_for('static', filename='assets/logo_purple.svg') }}" class="w-60 inline-block"
+                alt="Prime Creative Logo" />
         </div>
 
         <form method="post" action="/register">
@@ -48,10 +49,9 @@
                 </button>
             </div>
             <p class="text-slate-800 text-sm mt-6 text-center">Already have an account? <a href="/login"
-                    class="text-blue-600 font-medium hover:underline ml-1">Login here</a></p>
+                    class="font-medium hover:underline ml-1">Login here</a></p>
         </form>
     </div>
 </div>
-
 
 {% endblock %}
