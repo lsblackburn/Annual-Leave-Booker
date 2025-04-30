@@ -20,6 +20,13 @@
                         class="block py-2 px-3 text-white  rounded-sm md:bg-transparent md:p-0 md:dark:bg-transparent"
                         aria-current="page">Dashboard</a>
                 </li>
+                {% if is_admin %}
+                    <li>
+                        <a href="/"
+                            class="block py-2 px-3 text-white  rounded-sm md:bg-transparent md:p-0 md:dark:bg-transparent"
+                            aria-current="page">Control panel</a>
+                    </li>
+                {% endif %}
                 <li>
                     <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
                         class="flex items-center justify-between w-full py-2 px-3 rounded-sm md:hover:bg-transparent md:border-0  md:p-0 md:w-auto dark:text-white cursor-pointer">Account
