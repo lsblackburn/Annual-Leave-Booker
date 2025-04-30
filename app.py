@@ -22,8 +22,6 @@ class User(db.Model):
     def __repr__(self) -> str:
         return f'<User {self.name}>'
 
-
-
 # Routes to webpages
 @app.route('/')
 def dashboard():
@@ -31,7 +29,20 @@ def dashboard():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        user = User.query.filter_by(email=email, password=password).first()
+        if user: # Check if the user exists in the database
+            flash('Login successful!', 'success')
+            return render_template('pages/dashboard.html')
+        else: # If user does not exist, show error message
+            flash('Invalid email or password.', 'error')
+            return render_template('pages/login.html')
+    
     return render_template('pages/login.html')
+    
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
