@@ -55,5 +55,6 @@ def register(): # User registration route
 @auth.route('/logout', methods=['GET', 'POST'])
 def logout():
     # Handle user logout logic here
+    session.clear()  # Destroy all session data
     flash('You have been logged out.', 'success')
-    return render_template('pages/login.html')
+    return redirect(url_for('auth.login'))  # Redirect to login page
