@@ -1,11 +1,13 @@
 #imports
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
+import secrets
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
+app.secret_key = secrets.token_hex(16) # Generate a random secret key
 
 # Create a database model for the user
 class User(db.Model):
@@ -33,7 +35,30 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return render_template('pages/register.html')
+        
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            flash('Email is already registered.', 'error')
+            return render_template('pages/register.html')
+        
+        new_user = User(name=name, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        
+        flash('Registration successful. Please log in.', 'success')
+        return render_template('pages/login.html')
+    
     return render_template('pages/register.html')
+   
 
 
 
