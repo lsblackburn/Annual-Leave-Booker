@@ -49,3 +49,9 @@ def register(): # User registration route
         return render_template('pages/login.html')
 
     return render_template('pages/register.html')
+
+@auth.route('/logout', methods=['GET', 'POST'])
+def logout():
+    # Handle user logout logic here
+    flash('You have been logged out.', 'success')
+    return render_template('pages/login.html')
