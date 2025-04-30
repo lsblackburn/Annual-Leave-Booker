@@ -4,7 +4,6 @@ from validation import validate_registration_form, validate_login_form
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 
-
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -12,15 +11,17 @@ def login(): # User login route
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-
+        
         # Validate login form
-        user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
+        user = User.query.filter_by(email=email, password=password).first()
+        if user:
+            session['user_id'] = user.id  # Store user in session
             flash('Login successful!', 'success')
-            return render_template('pages/dashboard.html')
+            return redirect(url_for('dashboard'))
         else:
             flash('Invalid email or password.', 'error')
-
+            return render_template('pages/login.html')
+    
     return render_template('pages/login.html')
 
 
@@ -49,6 +50,7 @@ def register(): # User registration route
         return render_template('pages/login.html')
 
     return render_template('pages/register.html')
+
 
 @auth.route('/logout', methods=['GET', 'POST'])
 def logout():
