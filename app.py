@@ -1,5 +1,5 @@
 from flask import Flask, render_template, flash, session, redirect, url_for
-from models import db
+from models import db, User
 from routes.auth_routes import auth
 import secrets
 
@@ -17,7 +17,9 @@ def dashboard(): # This is the main dashboard route
     if 'user_id' not in session:
         flash('Please log in to access the dashboard.', 'error')
         return redirect(url_for('auth.login'))
-    return render_template('pages/dashboard.html')
+
+    user = User.query.get(session['user_id'])
+    return render_template('pages/dashboard.html', is_admin=user.is_admin)
 
 if __name__ == '__main__':
     with app.app_context():
