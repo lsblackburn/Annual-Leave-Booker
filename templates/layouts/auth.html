@@ -13,19 +13,7 @@
         {% block body %} {% endblock %}
     </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <script>
-            {% for category, message in messages %} // Popup message for success or error
-                Swal.fire({
-                icon: '{{ 'error' if category == 'error' else 'success' }}',
-                title: '{{ message }}',
-                confirmButtonColor: '#3085d6'
-                });
-            {% endfor %}
-            </script>
-        {% endif %}
-    {% endwith %}
+    {% include 'components/alert.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
