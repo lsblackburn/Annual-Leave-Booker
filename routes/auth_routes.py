@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from models import db, User
 from validation import validate_registration_form, validate_login_form
 from werkzeug.security import generate_password_hash
@@ -13,8 +13,8 @@ def login(): # User login route
         password = request.form['password']
         
         # Validate login form
-        user = User.query.filter_by(email=email, password=password).first()
-        if user:
+        user = User.query.filter_by(email=email).first() # Check if user exists by checking only the email
+        if user and check_password_hash(user.password, password): # Check password hash
             session['user_id'] = user.id  # Store user in session
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
