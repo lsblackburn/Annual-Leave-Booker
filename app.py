@@ -41,12 +41,12 @@ def register():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
         
-        if password != confirm_password:
+        if password != confirm_password: # Check if passwords match
             flash('Passwords do not match.', 'error')
             return render_template('pages/register.html')
         
         existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
+        if existing_user: # Check if email is already registered
             flash('Email is already registered.', 'error')
             return render_template('pages/register.html')
         
