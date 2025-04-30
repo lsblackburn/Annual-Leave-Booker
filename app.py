@@ -21,6 +21,16 @@ def dashboard(): # This is the main dashboard route
     user = User.query.get(session['user_id'])
     return render_template('pages/dashboard.html', is_admin=user.is_admin)
 
+@app.route('/controlpanel')
+def controlpanel(): # This is the main dashboard route
+    if 'user_id' not in session:
+        flash('Please log in to access the dashboard.', 'error')
+        return redirect(url_for('auth.login'))
+
+    user = User.query.get(session['user_id'])
+    return render_template('pages/controlpanel.html', is_admin=user.is_admin)
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all() # Create the database tables if they don't exist
