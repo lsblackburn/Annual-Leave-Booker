@@ -24,8 +24,18 @@ class User(db.Model):
 
 # Routes to webpages
 @app.route('/')
-def index():
+def dashboard():
     return render_template('pages/dashboard.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return render_template('pages/login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    return render_template('pages/register.html')
+
+
 
 if __name__ == '__main__':
     
