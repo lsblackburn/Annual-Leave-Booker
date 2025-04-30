@@ -18,3 +18,21 @@ form button:hover,
 #dropdownNavbar form button:hover {
     background-color: #916081;
 }
+#passwordContainer {
+    width: 100%;;
+}
+#passwordVisible {
+    display: flex;
+    align-items: center;
+    width: 46px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+#passwordVisible img {
+    right: 10px;
+}
+#passwordVisible img:nth-child(2) {
+    display: none;
+}
