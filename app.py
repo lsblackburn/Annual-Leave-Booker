@@ -1,9 +1,10 @@
 from flask import Flask, render_template, flash, session, redirect, url_for, request, g
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User
+from models import db, User, AnnualLeave
 from routes.auth_routes import auth
 import secrets
 from validation import is_strong_password
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -28,7 +29,10 @@ def dashboard(): # This is the main dashboard route
         return redirect(url_for('auth.login'))
 
     user = User.query.get(session['user_id'])
-    return render_template('pages/dashboard.html')
+    leaves = AnnualLeave.query.filter_by(user_id=user.id).order_by(AnnualLeave.start_date.desc()).all()
+
+    return render_template('pages/dashboard.html', is_admin=user.is_admin, leaves=leaves)
+
 
 @app.route('/controlpanel')
 def controlpanel():
@@ -44,6 +48,44 @@ def controlpanel():
         current_user_id=current_user.id,
         current_user_is_admin=current_user.is_admin
     )
+    
+@app.route('/leave/create', methods=['GET', 'POST'])
+def create_leave():
+    if 'user_id' not in session:
+        flash('Please log in to request leave.', 'error')
+        return redirect(url_for('auth.login'))
+
+    user = User.query.get(session['user_id'])
+
+    if request.method == 'POST':
+        start_date_str = request.form.get('start_date')
+        end_date_str = request.form.get('end_date')
+
+        try:
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+        except ValueError:
+            flash('Invalid date format. Please use YYYY-MM-DD.', 'error')
+            return render_template('pages/create_leave.html')
+
+        if end_date < start_date:
+            flash('End date cannot be before start date.', 'error')
+            return render_template('pages/create_leave.html')
+
+        new_leave = AnnualLeave(
+            user_id=user.id,
+            start_date=start_date,
+            end_date=end_date,
+            status='pending'
+        )
+
+        db.session.add(new_leave)
+        db.session.commit()
+        flash('Leave request submitted successfully.', 'success')
+        return redirect(url_for('dashboard'))
+
+    return render_template('pages/create_leave.html')
+
     
     
 @app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
