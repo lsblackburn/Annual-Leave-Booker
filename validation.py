@@ -1,6 +1,10 @@
 from models import User
+import re
 
 def validate_registration_form(name, email, password, confirm_password):
+    if name.strip().lower() == 'admin': # Stops users registering as 'admin'
+        return False, "The name 'Admin' is reserved and cannot be used."
+
     if password != confirm_password:
         return False, "Passwords do not match."
     
@@ -12,8 +16,6 @@ def validate_registration_form(name, email, password, confirm_password):
         return False, "Email is already registered."
 
     return True, None
-
-import re
 
 def is_strong_password(password):
     if len(password) < 8:
