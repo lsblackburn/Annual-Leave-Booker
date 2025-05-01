@@ -31,7 +31,7 @@ def controlpanel():
     users = User.query.all()
     return render_template('pages/controlpanel.html', users=users, current_user_id=current_user.id)
 
-    
+
 @app.route('/user/delete/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
     if 'user_id' not in session:
@@ -57,7 +57,29 @@ def delete_user(user_id):
     db.session.delete(user_to_delete)
     db.session.commit()
     flash('User deleted successfully.', 'success')
+    
+    
+@app.route('/make_admin/<int:user_id>', methods=['POST'])
+def make_admin(user_id):
+    if 'user_id' not in session:
+        flash('You must be logged in to perform this action.', 'error')
+        return redirect(url_for('auth.login'))
+
+    current_user = User.query.get(session['user_id'])
+    if current_user.id == user_id:
+        flash('You cannot modify your own role.', 'error')
+        return redirect(url_for('controlpanel'))
+
+    user_to_promote = User.query.get(user_id)
+    if user_to_promote:
+        user_to_promote.is_admin = True
+        db.session.commit()
+        flash(f'User {user_to_promote.name} is now an admin.', 'success')
+    else:
+        flash('User not found.', 'error')
+
     return redirect(url_for('controlpanel'))
+
 
 
 if __name__ == '__main__':
