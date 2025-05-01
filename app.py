@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, session, redirect, url_for, request
+from flask import Flask, render_template, flash, session, redirect, url_for, request, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User
 from routes.auth_routes import auth
@@ -14,6 +14,13 @@ app.secret_key = secrets.token_hex(16) # Generate a random secret key
 db.init_app(app)
 app.register_blueprint(auth)
 
+@app.before_request
+def load_user(): # Load the user from the session before each request
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+    else:
+        g.user = None
+
 @app.route('/')
 def dashboard(): # This is the main dashboard route
     if 'user_id' not in session:
@@ -21,7 +28,7 @@ def dashboard(): # This is the main dashboard route
         return redirect(url_for('auth.login'))
 
     user = User.query.get(session['user_id'])
-    return render_template('pages/dashboard.html', is_admin=user.is_admin)
+    return render_template('pages/dashboard.html')
 
 @app.route('/controlpanel')
 def controlpanel():

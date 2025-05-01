@@ -20,7 +20,7 @@
                         class="block py-2 px-3 text-white  rounded-sm md:bg-transparent md:p-0 md:dark:bg-transparent"
                         aria-current="page">Dashboard</a>
                 </li>
-                {% if is_admin %}
+                {% if g.user and g.user.is_admin %}
                     <li>
                         <a href="/controlpanel"
                             class="block py-2 px-3 text-white  rounded-sm md:bg-transparent md:p-0 md:dark:bg-transparent"
