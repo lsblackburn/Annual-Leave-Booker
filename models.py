@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model): # Create a model for users
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
@@ -14,7 +14,7 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.name}>'
     
-class AnnualLeave(db.Model):
+class AnnualLeave(db.Model): # Create a model for annual leave requests
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
@@ -23,7 +23,7 @@ class AnnualLeave(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
 
-    user = db.relationship('User', backref='annual_leaves')
+    user = db.relationship('User', backref='annual_leaves') # Establish a relationship with the User model with a foreign key
 
     def __repr__(self):
         return f'<AnnualLeave {self.id}>'

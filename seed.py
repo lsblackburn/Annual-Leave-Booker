@@ -3,7 +3,7 @@ from models import User
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 
-def seed_admin_user():
+def seed_admin_user(): # Function to seed the admin user
     with app.app_context():
         # Check if the admin already exists
         if not User.query.filter_by(email='admin@admin.com').first():
@@ -21,6 +21,7 @@ def seed_admin_user():
             print("Admin user created.")
         else:
             print("Admin user already exists.")
+
 
 if __name__ == '__main__':
     seed_admin_user()
