@@ -29,8 +29,12 @@ def controlpanel():
 
     current_user = User.query.get(session['user_id'])
     users = User.query.all()
-    return render_template('pages/controlpanel.html', users=users, current_user_id=current_user.id)
-
+    return render_template(
+        'pages/controlpanel.html',
+        users=users,
+        current_user_id=current_user.id,
+        current_user_is_admin=current_user.is_admin
+    )
 
 @app.route('/user/delete/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
@@ -79,6 +83,28 @@ def make_admin(user_id):
         flash('User not found.', 'error')
 
     return redirect(url_for('controlpanel'))
+
+@app.route('/revoke_admin/<int:user_id>', methods=['POST'])
+def revoke_admin(user_id):
+    if 'user_id' not in session:
+        flash('You must be logged in to perform this action.', 'error')
+        return redirect(url_for('auth.login'))
+
+    current_user = User.query.get(session['user_id'])
+    if not current_user.is_admin:
+        flash('Only admins can revoke admin rights.', 'error')
+        return redirect(url_for('controlpanel'))
+
+    user = User.query.get_or_404(user_id)
+    if user.id == current_user.id:
+        flash('You cannot revoke your own admin rights.', 'error')
+        return redirect(url_for('controlpanel'))
+
+    user.is_admin = False
+    db.session.commit()
+    flash(f'{user.name} is no longer an admin.', 'success')
+    return redirect(url_for('controlpanel'))
+
 
 
 
