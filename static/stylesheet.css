@@ -44,12 +44,16 @@ table th {
 }
 #deleteUser,
 #revokeAdmin,
-#makeAdmin {
+#makeAdmin,
+#editUser {
     color: #ffffff;
     padding: 8px 12px;
     border-radius: 4px/4px;
     cursor: pointer;
     transition: 0.35s ease-in-out;
+}
+#editUser {
+    background-color: #8c17eb;
 }
 #deleteUser {
     background-color: #d9534f;

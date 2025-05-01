@@ -132,6 +132,7 @@ def make_admin(user_id):
 
     return redirect(url_for('controlpanel'))
 
+
 @app.route('/revoke_admin/<int:user_id>', methods=['POST'])
 def revoke_admin(user_id):
     if 'user_id' not in session:
