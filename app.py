@@ -1,7 +1,9 @@
-from flask import Flask, render_template, flash, session, redirect, url_for
+from flask import Flask, render_template, flash, session, redirect, url_for, request
+from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User
 from routes.auth_routes import auth
 import secrets
+from validation import is_strong_password
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -35,6 +37,52 @@ def controlpanel():
         current_user_id=current_user.id,
         current_user_is_admin=current_user.is_admin
     )
+    
+    
+@app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+def edit_user(user_id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('auth.login'))
+
+    current_user = User.query.get(session['user_id'])
+    user_to_edit = User.query.get_or_404(user_id)
+
+    if current_user.name.lower() != 'admin':
+        flash('You do not have permission to edit users.', 'error')
+        return redirect(url_for('controlpanel'))
+
+    if request.method == 'POST':
+        name = request.form['name'].strip()
+        email = request.form['email'].strip()
+        password = request.form['password'].strip()
+
+        if not name or not email:
+            flash('Name and email cannot be empty.', 'error')
+            return render_template('pages/edit_user.html', user=user_to_edit)
+
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user and existing_user.id != user_to_edit.id:
+            flash('Email is already registered to another user.', 'error')
+            return render_template('pages/edit_user.html', user=user_to_edit)
+
+        user_to_edit.name = name
+        user_to_edit.email = email
+
+        if password:
+            is_valid, message = is_strong_password(password)
+            if not is_valid:
+                flash(message, 'error')
+                return render_template('pages/edit_user.html', user=user_to_edit)
+            user_to_edit.password = generate_password_hash(password)
+
+        db.session.commit()
+        flash('User updated successfully.', 'success')
+        return redirect(url_for('controlpanel'))
+
+    return render_template('pages/edit_user.html', user=user_to_edit)
+    
+    
 
 @app.route('/user/delete/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
