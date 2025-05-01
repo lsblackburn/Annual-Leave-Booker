@@ -14,8 +14,8 @@ def dashboard_view():
     # Retrieve the current user from the database
     user = User.query.get(session['user_id'])
 
-    # Fetch the user's leave records, ordered by start date descending
-    leaves = AnnualLeave.query.filter_by(user_id=user.id).order_by(AnnualLeave.start_date.desc()).all()
+    # Fetch all leave records, ordered by start date descending
+    leaves = AnnualLeave.query.order_by(AnnualLeave.start_date.desc()).all()
 
     # Render the dashboard template with user role and leave data
     return render_template('pages/dashboard.html', is_admin=user.is_admin, leaves=leaves)
