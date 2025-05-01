@@ -17,7 +17,7 @@ def login(): # User login route
         if user and check_password_hash(user.password, password): # Check password hash
             session['user_id'] = user.id  # Store user in session
             flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('dashboard.dashboard_view'))  # Redirect to dashboard
         else:
             flash('Invalid email or password.', 'error')
             return render_template('pages/login.html')
