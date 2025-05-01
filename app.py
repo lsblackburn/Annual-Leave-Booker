@@ -86,6 +86,31 @@ def create_leave():
 
     return render_template('pages/create_leave.html')
 
+@app.route('/leave/<int:leave_id>/approve', methods=['POST'])
+def approve_leave(leave_id):
+    user = User.query.get(session['user_id'])
+    if not user.is_admin:
+        flash('You do not have permission to perform this action.', 'error')
+        return redirect(url_for('dashboard'))
+
+    leave = AnnualLeave.query.get_or_404(leave_id)
+    leave.status = 'approved'
+    db.session.commit()
+    flash('Leave request approved.', 'success')
+    return redirect(url_for('dashboard'))
+
+@app.route('/leave/<int:leave_id>/reject', methods=['POST'])
+def reject_leave(leave_id):
+    user = User.query.get(session['user_id'])
+    if not user.is_admin:
+        flash('You do not have permission to perform this action.', 'error')
+        return redirect(url_for('dashboard'))
+
+    leave = AnnualLeave.query.get_or_404(leave_id)
+    leave.status = 'rejected'
+    db.session.commit()
+    flash('Leave request rejected.', 'success')
+    return redirect(url_for('dashboard'))
     
     
 @app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
