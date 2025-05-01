@@ -45,15 +45,17 @@ table th {
 #deleteUser,
 #revokeAdmin,
 #makeAdmin,
-#editUser {
+#editUser,
+#createLeave {
     color: #ffffff;
     padding: 8px 12px;
     border-radius: 4px/4px;
     cursor: pointer;
     transition: 0.35s ease-in-out;
 }
-#editUser {
-    background-color: #8c17eb;
+#editUser,
+#createLeave {
+    background-color: #5e3b53;
 }
 #deleteUser {
     background-color: #d9534f;
@@ -63,6 +65,10 @@ table th {
 }
 #makeAdmin {
     background-color: #5cb85c;
+}
+#createLeave {
+    width: fit-content;
+    margin-bottom: 1rem;
 }
 .crud-actions {
     row-gap: 5px;
