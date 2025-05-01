@@ -36,10 +36,31 @@ form button:hover,
 #passwordVisible img:nth-child(1) {
     display: none;
 }
-
 table {
     width: 100%;
 }
 table th {
     text-align: left;
+}
+#deleteUser,
+#revokeAdmin,
+#makeAdmin {
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 4px/4px;
+    cursor: pointer;
+    transition: 0.35s ease-in-out;
+}
+#deleteUser {
+    background-color: #d9534f;
+}
+#revokeAdmin {
+    background-color: #5bc0de;
+}
+#makeAdmin {
+    background-color: #5cb85c;
+}
+.crud-actions {
+    row-gap: 5px;
+    column-gap: 10px;
 }

@@ -25,24 +25,24 @@
             <td class="px-4 py-3">{{ user.email }}</td>
             <td class="px-4 py-3">{{ user.created_at }}</td>
             <td class="px-4 py-3">{{ user.updated_at }}</td>
-            <td class="px-4 py-3">
-                <a href="#" class="text-blue-600 hover:underline mr-2">Edit</a>
+            <td class="px-4 py-3 flex flex-row items-center flex-wrap crud-actions">
+                <a href="#" class="text-blue-600 hover:underline">Edit</a>
                 {% if user.id != current_user_id %}
                     <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}"
                         onsubmit="return confirm('Are you sure you want to delete this user?');">
-                        <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                        <button id="deleteUser" type="submit" class="hover:underline">Delete</button>
                     </form>
 
                     {% if current_user_is_admin %}
                         {% if user.is_admin %}
                             <form method="POST" action="{{ url_for('revoke_admin', user_id=user.id) }}"
                                 onsubmit="return confirm('Are you sure you want to revoke admin rights from this user?');">
-                                <button type="submit" class="text-yellow-600 hover:underline">Revoke Admin</button>
+                                <button id="revokeAdmin" type="submit" class="hover:underline">Revoke Admin</button>
                             </form>
                         {% else %}
                             <form method="POST" action="{{ url_for('make_admin', user_id=user.id) }}"
                                 onsubmit="return confirm('Are you sure you want to grant admin rights to this user?');">
-                                <button type="submit" class="text-blue-600 hover:underline">Make Admin</button>
+                                <button id="makeAdmin" type="submit" class="hover:underline">Make Admin</button>
                             </form>
                         {% endif %}
                     {% endif %}
