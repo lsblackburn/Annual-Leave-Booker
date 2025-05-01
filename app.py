@@ -22,13 +22,42 @@ def dashboard(): # This is the main dashboard route
     return render_template('pages/dashboard.html', is_admin=user.is_admin)
 
 @app.route('/controlpanel')
-def controlpanel(): # This is the main dashboard route
+def controlpanel():
     if 'user_id' not in session:
         flash('Please log in to access the dashboard.', 'error')
         return redirect(url_for('auth.login'))
 
-    user = User.query.get(session['user_id'])
-    return render_template('pages/controlpanel.html', is_admin=user.is_admin)
+    current_user = User.query.get(session['user_id'])
+    users = User.query.all()
+    return render_template('pages/controlpanel.html', users=users, current_user_id=current_user.id)
+
+    
+@app.route('/user/delete/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    if 'user_id' not in session:
+        flash('You must be logged in to perform this action.', 'error')
+        return redirect(url_for('auth.login'))
+
+    current_user = User.query.get(session['user_id'])
+
+    if not current_user or not current_user.is_admin:
+        flash('You are not authorized to delete users.', 'error')
+        return redirect(url_for('controlpanel'))
+
+    user_to_delete = User.query.get(user_id)
+
+    if not user_to_delete:
+        flash('User not found.', 'error')
+        return redirect(url_for('controlpanel'))
+
+    if user_to_delete.id == current_user.id:
+        flash('You cannot delete your own account.', 'error')
+        return redirect(url_for('controlpanel'))
+
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    flash('User deleted successfully.', 'success')
+    return redirect(url_for('controlpanel'))
 
 
 if __name__ == '__main__':

@@ -1,11 +1,41 @@
 {% extends "layouts/app.html" %}
 
 {% block head %}
-    <title>Control Panel</title>
+<title>Control Panel</title>
 {% endblock %}
 
 {% block body %}
 
-    <h1>Control panel</h1>
+<table class="min-w-full divide-y divide-gray-200 overflow-hidden rounded-2xl shadow-md bg-white">
+    <thead class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wider">
+        <tr>
+            <th class="px-4 py-3 text-left">ID</th>
+            <th class="px-4 py-3 text-left">Name</th>
+            <th class="px-4 py-3 text-left">Email</th>
+            <th class="px-4 py-3 text-left">Created At</th>
+            <th class="px-4 py-3 text-left">Updated At</th>
+            <th class="px-4 py-3 text-left">Actions</th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 text-gray-700 text-sm">
+        {% for user in users %}
+        <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-4 py-3">{{ user.id }}</td>
+            <td class="px-4 py-3">{{ user.name }}</td>
+            <td class="px-4 py-3">{{ user.email }}</td>
+            <td class="px-4 py-3">{{ user.created_at }}</td>
+            <td class="px-4 py-3">{{ user.updated_at }}</td>
+            <td class="px-4 py-3">
+                <a href="#" class="text-blue-600 hover:underline mr-2">Edit</a>
+                {% if user.id != current_user_id %}
+                <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                    <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}
