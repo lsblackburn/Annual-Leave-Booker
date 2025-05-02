@@ -42,10 +42,10 @@ table {
 table th {
     text-align: left;
 }
-#deleteUser,
-#revokeAdmin,
-#makeAdmin,
-#editUser,
+.red_btn,
+.blue_btn,
+.green_btn,
+.purple_btn,
 #createLeave {
     color: #ffffff;
     padding: 8px 12px;
@@ -53,17 +53,16 @@ table th {
     cursor: pointer;
     transition: 0.35s ease-in-out;
 }
-#editUser,
-#createLeave {
+.purple_btn {
     background-color: #5e3b53;
 }
-#deleteUser {
+.red_btn {
     background-color: #d9534f;
 }
-#revokeAdmin {
+.blue_btn {
     background-color: #5bc0de;
 }
-#makeAdmin {
+.green_btn {
     background-color: #5cb85c;
 }
 #createLeave {
