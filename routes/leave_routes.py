@@ -41,6 +41,38 @@ def create_leave():
     # Render the leave creation form for GET requests
     return render_template('pages/create_leave.html')
 
+@leave.route('/<int:leave_id>/edit', methods=['GET', 'POST'])
+def edit_leave(leave_id):
+    leave = AnnualLeave.query.get_or_404(leave_id)
+    
+    # Check if the current user is the one who booked the leave
+    if leave.user_id != session['user_id']:
+        flash('You can only edit your own leave.', 'error')
+        return redirect(url_for('dashboard.dashboard_view'))
+
+    if request.method == 'POST':
+        try:
+            start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
+            end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
+        except ValueError:
+            flash('Invalid date format.', 'error')
+            return render_template('pages/edit_leave.html', leave=leave)
+
+        if end_date < start_date:
+            flash('End date cannot be before start date.', 'error')
+            return render_template('pages/edit_leave.html', leave=leave)
+
+        # Update the leave dates and set status to 'pending' for reapproval
+        leave.start_date = start_date
+        leave.end_date = end_date
+        leave.status = 'pending'
+        db.session.commit()
+
+        flash('Leave updated. Awaiting admin approval.', 'success')
+        return redirect(url_for('dashboard.dashboard_view'))
+
+    return render_template('pages/edit_leave.html', leave=leave)
+
 @leave.route('/<int:leave_id>/approve', methods=['POST'])  # Route for approving a leave request
 def approve_leave(leave_id):
     # Retrieve the current user from the session

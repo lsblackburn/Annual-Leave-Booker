@@ -25,16 +25,23 @@
             <td class="px-4 py-3">{{ leave.status }}</td>
             <td class="px-4 py-3">
                 {% if current_user_is_admin and leave.status == 'pending' %}
+                    <!-- Admin actions (approve/reject) if the leave status is pending -->
                     <form method="POST" action="{{ url_for('approve_leave', leave_id=leave.id) }}" style="display:inline;">
                         <button type="submit" class="text-green-600 hover:underline">Approve</button>
                     </form>
                     <form method="POST" action="{{ url_for('reject_leave', leave_id=leave.id) }}" style="display:inline;">
                         <button type="submit" class="text-red-600 hover:underline">Reject</button>
                     </form>
+                {% elif leave.user_id == session['user_id'] %}
+                    <!-- If the logged-in user is the one who booked the leave, they can edit their leave -->
+                    <form method="GET" action="{{ url_for('leave.edit_leave', leave_id=leave.id) }}" style="display:inline;">
+                        <button type="submit" class="text-blue-600 hover:underline">Edit</button>
+                    </form>
                 {% else %}
+                    <!-- If the user is not an admin or the owner of the leave, show "No actions available" -->
                     <span class="text-gray-500">No actions available</span>
                 {% endif %}
-            </td>
+            </td>            
         </tr>
         {% else %}
         <tr>
