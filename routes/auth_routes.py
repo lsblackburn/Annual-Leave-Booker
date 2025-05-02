@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from models import db, User
-from validation import validate_registration_form, validate_login_form
+from validation import validate_registration_form
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Define the authentication blueprint
