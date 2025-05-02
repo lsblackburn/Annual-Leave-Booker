@@ -33,6 +33,11 @@ app.register_blueprint(admin)
 def load_user():
     g.user = User.query.get(session['user_id']) if 'user_id' in session else None
 
+# Context processor to inject the current user into templates
+@app.context_processor
+def inject_user():
+    return dict(current_user=g.user)
+
 # Entry point for running the application
 if __name__ == '__main__':
     with app.app_context():
