@@ -20,9 +20,17 @@
     <tbody class="divide-y divide-gray-200 text-gray-700 text-sm">
         {% for leave in leaves %}
         <tr class="hover:bg-gray-50 transition-colors">
-            <td class="px-4 py-3">{{ leave.user.name }}</td>
-            <td class="px-4 py-3"><strong>Starting:</strong> {{ leave.start_date.strftime('%d/%m/%Y') }}<br> <strong>Ending:</strong> {{ leave.end_date.strftime('%d/%m/%Y') }}</td>
-            <td class="px-4 py-3">{{ leave.status }}</td>
+            <td class="px-4 py-3"><p>{{ leave.user.name }}</p></td>
+            <td class="px-4 py-3"><p><strong>Starting:</strong> {{ leave.start_date.strftime('%d/%m/%Y') }}<br> <strong>Ending:</strong> {{ leave.end_date.strftime('%d/%m/%Y') }}</p></td>
+            
+            {% if leave.status == 'approved' %}
+                <td class="px-4 py-3"><p class="text-green-600">Approved</p></td>
+            {% elif leave.status == 'rejected' %}
+                <td class="px-4 py-3"><p class="text-red-600">Rejected</p></td>
+            {% elif leave.status == 'pending' %}
+                <td class="px-4 py-3"><p class="text-yellow-600">Pending</p></td>
+            {% endif %}
+
             <td class="px-4 py-3">
                 {% if current_user.is_admin and leave.status == 'pending' %}
                     <!-- Admin actions (approve/reject) if the leave status is pending -->
