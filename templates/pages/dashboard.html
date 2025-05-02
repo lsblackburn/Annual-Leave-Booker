@@ -43,7 +43,7 @@
                 {% elif leave.user_id == session['user_id'] %}
                     <!-- If the logged-in user is the one who booked the leave, they can edit their leave -->
                     <form method="GET" action="{{ url_for('leave.edit_leave', leave_id=leave.id) }}" style="display:inline;">
-                        <button type="submit" class="text-blue-600 hover:underline">Edit</button>
+                        <button type="submit" class="purple_btn hover:underline">Edit</button>
                     </form>
                 {% else %}
                     <!-- If the user is not an admin or the owner of the leave, show "No actions available" -->
