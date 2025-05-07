@@ -10,7 +10,7 @@ import secrets
 app = Flask(__name__)
 
 # Configure the SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/annual_leave_db'
 
 # Enhance session security
 app.config['SESSION_COOKIE_HTTPONLY'] = True # Prevent JavaScript access to session cookie
