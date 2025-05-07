@@ -16,14 +16,19 @@ class User(db.Model): # Create a model for users
     
 class AnnualLeave(db.Model): # Create a model for annual leave requests
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id', ondelete='CASCADE'), # Establish a foreign key relationship with the User model and set it to cascade delete
+        nullable=False,
+        
+    )
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(50), default='pending') # pending, approved, rejected
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
 
-    user = db.relationship('User', backref='annual_leaves') # Establish a relationship with the User model with a foreign key
+    user = db.relationship('User', backref='annual_leaves')
 
     def __repr__(self):
         return f'<AnnualLeave {self.id}>'
