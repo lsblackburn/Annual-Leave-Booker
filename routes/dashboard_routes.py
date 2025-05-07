@@ -14,7 +14,7 @@ def dashboard_view():
     # Retrieve the current user from the database
     user = User.query.get(session['user_id'])
 
-    # Fetch all leave records, ordered by start date descending. If rejected do not display on the dashboard
+    # Fetch all leave records, ordered by updated_at descending. If rejected do not display on the dashboard
     leaves = AnnualLeave.query.where(AnnualLeave.status != 'rejected').order_by(AnnualLeave.updated_at.desc()).all()
 
     # Render the dashboard template with user role and leave data
@@ -31,7 +31,7 @@ def your_leave_view():
     # Retrieve the current user from the database
     user = User.query.get(session['user_id'])
 
-    # Fetch all leave records for the current user, ordered by start date descending. If rejected do not display on the dashboard
+    # Fetch all leave records for the current user, ordered by updated_at descending. If rejected do not display on the dashboard
     leaves = AnnualLeave.query.filter_by(user_id=user.id).order_by(AnnualLeave.updated_at.desc()).all()
 
     # Render the dashboard template with user role and leave data
