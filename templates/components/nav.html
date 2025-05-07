@@ -8,40 +8,39 @@
             aria-controls="navbar-dropdown" aria-expanded="false">
             <span class="sr-only">Open main menu</span>
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M1 1h15M1 7h15M1 13h15" />
             </svg>
         </button>
         <div class="hidden w-full md:block md:w-auto" id="navbar-dropdown">
-            <ul
-                class="flex flex-col font-medium p-4 md:p-0 mt-4 border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+            <ul class="bg-white border-black border-2 flex flex-col font-medium p-4 md:p-0 mt-4 border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                 <li>
                     <a href="/"
-                        class="block py-2 px-3 text-white  rounded-sm md:bg-transparent md:p-0 md:dark:bg-transparent"
+                        class="text-black block py-2 px-3 rounded-sm md:bg-transparent md:p-0 md:dark:bg-transparent"
                         aria-current="page">Dashboard</a>
                 </li>
                 {% if g.user and g.user.is_admin %} <!-- Admin link only visible to admin users -->
                     <li>
                         <a href="/controlpanel"
-                            class="block py-2 px-3 text-white  rounded-sm md:bg-transparent md:p-0 md:dark:bg-transparent"
+                            class="text-black block py-2 px-3 rounded-sm md:bg-transparent md:p-0 md:dark:bg-transparent"
                             aria-current="page">Control panel</a>
                     </li>
                 {% endif %}
                 <li>
                     <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
-                        class="flex items-center justify-between w-full py-2 px-3 rounded-sm md:hover:bg-transparent md:border-0  md:p-0 md:w-auto dark:text-white cursor-pointer">Account
+                        class="text-black flex items-center justify-between w-full py-2 px-3 rounded-sm md:hover:bg-transparent md:border-0 md:p-0 md:w-auto cursor-pointer">Account
                         <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            <path stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="m1 1 4 4 4-4" />
                         </svg></button>
                     <!-- Dropdown menu -->
                     <div id="dropdownNavbar"
                         class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 border-white">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
+                        <ul class="py-2 text-sm text-black" aria-labelledby="dropdownLargeButton">
                             <li>
                                 <a href="#"
-                                    class="block px-4 py-2 text-white text-center">Your annual leave</a>
+                                    class="text-white block px-4 py-2 text-center">Your annual leave</a>
                             </li>
                         </ul>
                         <form method="post" action="/logout" class="py-1">
