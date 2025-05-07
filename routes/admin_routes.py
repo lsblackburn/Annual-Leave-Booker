@@ -61,6 +61,11 @@ def edit_user(user_id):
 def delete_user(user_id):
     # Retrieve the current user from the database
     current_user = User.query.get(session['user_id'])
+    
+    # Check if the current user has permission to edit users
+    if current_user.name.lower() != 'admin':
+        flash('Permission denied.', 'error')
+        return redirect(url_for('admin.controlpanel'))
 
     # Check if the current user is an admin and not trying to delete themselves
     if not current_user.is_admin or current_user.id == user_id:
@@ -86,6 +91,12 @@ def make_admin(user_id):
 
     # Retrieve the user to be promoted
     user = User.query.get(user_id)
+    
+    # Check if the current user has permission to edit users
+    if user.name.lower() != 'admin':
+        flash('Permission denied.', 'error')
+        return redirect(url_for('admin.controlpanel'))
+    
     if user:
         # Set the user's admin status to True
         user.is_admin = True
@@ -98,6 +109,11 @@ def make_admin(user_id):
 def revoke_admin(user_id):
     # Retrieve the current user from the database
     current_user = User.query.get(session['user_id'])
+
+    # Check if the current user has permission to edit users
+    if user.name.lower() != 'admin':
+        flash('Permission denied.', 'error')
+        return redirect(url_for('admin.controlpanel'))
 
     # Check if the current user is an admin and not trying to revoke their own admin rights
     if not current_user.is_admin or current_user.id == user_id:
