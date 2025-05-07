@@ -28,7 +28,7 @@ class AnnualLeave(db.Model): # Create a model for annual leave requests
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
 
-    user = db.relationship('User', backref='annual_leaves')
+    user = db.relationship('User', backref=db.backref('annual_leaves', passive_deletes=True)) # Establish a relationship with the User model
 
     def __repr__(self):
         return f'<AnnualLeave {self.id}>'
