@@ -33,7 +33,7 @@ def edit_user(user_id):
 
     # Check if the current user has permission to edit users
     if current_user.name.lower() != 'admin':
-        flash('Permission denied.', 'error')
+        flash('Permission denied, you cannot edit the main admin.', 'error')
         return redirect(url_for('admin.controlpanel'))
 
     if request.method == 'POST':
@@ -57,15 +57,11 @@ def edit_user(user_id):
     # Render the edit user template with the user's current data
     return render_template('pages/edit_user.html', user=user)
 
+
 @admin.route('/user/delete/<int:user_id>', methods=['POST'])  # Route to delete a user
 def delete_user(user_id):
     # Retrieve the current user from the database
     current_user = User.query.get(session['user_id'])
-    
-    # Check if the current user has permission to edit users
-    if current_user.name.lower() != 'admin':
-        flash('Permission denied.', 'error')
-        return redirect(url_for('admin.controlpanel'))
 
     # Check if the current user is an admin and not trying to delete themselves
     if not current_user.is_admin or current_user.id == user_id:
@@ -74,6 +70,11 @@ def delete_user(user_id):
 
     # Retrieve the user to be deleted
     user = User.query.get(user_id)
+    
+    if user.name.lower() == 'admin':
+        flash('Cannot delete the main admin.', 'error')
+        return redirect(url_for('admin.controlpanel'))
+    
     if user:
         # Delete the user from the database
         db.session.delete(user)
@@ -81,6 +82,7 @@ def delete_user(user_id):
         flash('User deleted.', 'success')
 
     return redirect(url_for('admin.controlpanel'))
+
 
 @admin.route('/make_admin/<int:user_id>', methods=['POST'])  # Route to promote a user to admin
 def make_admin(user_id):
@@ -92,9 +94,8 @@ def make_admin(user_id):
     # Retrieve the user to be promoted
     user = User.query.get(user_id)
     
-    # Check if the current user has permission to edit users
-    if user.name.lower() != 'admin':
-        flash('Permission denied.', 'error')
+    if user.name.lower() == 'admin':
+        flash('Cannot promote the main admin.', 'error')
         return redirect(url_for('admin.controlpanel'))
     
     if user:
@@ -105,15 +106,12 @@ def make_admin(user_id):
 
     return redirect(url_for('admin.controlpanel'))
 
+
+
 @admin.route('/revoke_admin/<int:user_id>', methods=['POST'])  # Route to revoke a user's admin rights
 def revoke_admin(user_id):
     # Retrieve the current user from the database
     current_user = User.query.get(session['user_id'])
-
-    # Check if the current user has permission to edit users
-    if user.name.lower() != 'admin':
-        flash('Permission denied.', 'error')
-        return redirect(url_for('admin.controlpanel'))
 
     # Check if the current user is an admin and not trying to revoke their own admin rights
     if not current_user.is_admin or current_user.id == user_id:
@@ -122,6 +120,11 @@ def revoke_admin(user_id):
 
     # Retrieve the user whose admin rights are to be revoked
     user = User.query.get(user_id)
+    
+    if user.name.lower() == 'admin':
+        flash('Cannot revoke admin rights from the main admin.', 'error')
+        return redirect(url_for('admin.controlpanel'))
+    
     if user:
         # Set the user's admin status to False
         user.is_admin = False
