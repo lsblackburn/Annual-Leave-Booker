@@ -16,7 +16,7 @@ def controlpanel():
     user = User.query.get(session['user_id'])
     
     # Check if the user is an admin, if not redirect to dashboard
-    if user.is_admin == False:
+    if not user.is_admin:
         flash('Permission denied, you are not an admin.', 'error')
         return redirect(url_for('dashboard.dashboard_view'))
 
