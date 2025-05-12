@@ -9,8 +9,6 @@
 <a id="createLeave" href="{{ url_for('leave.create_leave') }}" class="purple_btn block hover:underline">Request
     Leave</a> <!-- Button for the user to book annual leave -->
 
-{% if leaves %}
-
 <div class="shadow-md sm:rounded-lg mt-4">
 
     <div class="overflow-x-auto">
@@ -82,7 +80,5 @@
     </div>
 
 </div>
-
-{% endif %}
 
 {% endblock %}
