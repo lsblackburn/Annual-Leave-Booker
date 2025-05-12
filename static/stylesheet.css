@@ -36,9 +36,6 @@ form button:hover,
 #passwordVisible img:nth-child(1) {
     display: none;
 }
-table {
-    width: 100%;
-}
 table th {
     text-align: left;
 }
