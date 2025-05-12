@@ -14,6 +14,11 @@ def controlpanel():
 
     # Retrieve the current user from the database
     user = User.query.get(session['user_id'])
+    
+    # Check if the user is an admin, if not redirect to dashboard
+    if user.is_admin == False:
+        flash('Permission denied, you are not an admin.', 'error')
+        return redirect(url_for('dashboard.dashboard_view'))
 
     # Render the control panel template with necessary context
     return render_template(
