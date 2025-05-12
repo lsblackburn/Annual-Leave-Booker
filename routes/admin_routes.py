@@ -17,7 +17,7 @@ def controlpanel():
     
     # Check if the user is an admin, if not redirect to dashboard
     if not user.is_admin:
-        flash('Permission denied, you are not an admin.', 'error')
+        flash('Access denied: Administrator privileges are required.', 'error')
         return redirect(url_for('dashboard.dashboard_view'))
 
     # Render the control panel template with necessary context
