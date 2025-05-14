@@ -20,7 +20,6 @@ class AnnualLeave(db.Model): # Create a model for annual leave requests
         db.Integer,
         db.ForeignKey('user.id', ondelete='CASCADE'), # Establish a foreign key relationship with the User model and set it to cascade delete
         nullable=False,
-        
     )
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
