@@ -14,8 +14,8 @@ def dashboard_view():
     # Retrieve the current user from the database
     user = User.query.get(session['user_id'])
 
-    # Fetch all leave records, ordered by updated_at descending. If rejected do not display on the dashboard
-    leaves = AnnualLeave.query.where(AnnualLeave.status != 'rejected').order_by(AnnualLeave.updated_at.desc()).all()
+    # Fetch all approved leave records, ordered by updated_at descending
+    leaves = AnnualLeave.query.where(AnnualLeave.status == 'Approved').order_by(AnnualLeave.updated_at.desc()).all()
 
     # Render the dashboard template with user role and leave data
     return render_template('pages/dashboard.html', is_admin=user.is_admin, leaves=leaves)
