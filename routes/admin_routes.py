@@ -97,55 +97,23 @@ def delete_user(user_id):
     return redirect(url_for('admin.controlpanel'))
 
 
-@admin.route('/make_admin/<int:user_id>', methods=['POST'])  # Route to promote a user to admin
-def make_admin(user_id):
-    # Prevent users from modifying their own role
-    if session['user_id'] == user_id:
-        flash('Cannot modify your own role.', 'error')
+# Route to toggle admin status of a user
+@admin.route('/toggle_admin/<int:user_id>/<action>', methods=['POST'])
+@admin_required
+def toggle_admin(current_user, user_id, action):
+    if current_user.id == user_id:
+        flash("Cannot modify your own role.", "error")
         return redirect(url_for('admin.controlpanel'))
 
-    # Retrieve the user to be promoted
     user, response = get_user_or_redirect(user_id)
     if response:
         return response
-    
-    if is_main_admin(user):
-        flash('Cannot promote the main admin.', 'error')
-        return redirect(url_for('admin.controlpanel'))
-    
-    if user:
-        # Set the user's admin status to True
-        user.is_admin = True
-        db.session.commit()
-        flash('User promoted to admin.', 'success')
 
-    return redirect(url_for('admin.controlpanel'))
-
-
-
-@admin.route('/revoke_admin/<int:user_id>', methods=['POST'])  # Route to revoke a user's admin rights
-def revoke_admin(user_id):
-    # Retrieve the current user from the database
-    current_user = User.query.get(session['user_id'])
-
-    # Check if the current user is an admin and not trying to revoke their own admin rights
-    if not current_user.is_admin or current_user.id == user_id:
-        flash('Permission denied.', 'error')
+    if is_main_admin(user): # Check if the user is the main admin
+        flash("Cannot modify main admin.", "error")
         return redirect(url_for('admin.controlpanel'))
 
-    # Retrieve the user whose admin rights are to be revoked
-    user, response = get_user_or_redirect(user_id)
-    if response:
-        return response
-    
-    if is_main_admin(user):
-        flash('Cannot revoke admin rights from the main admin.', 'error')
-        return redirect(url_for('admin.controlpanel'))
-    
-    if user:
-        # Set the user's admin status to False
-        user.is_admin = False
-        db.session.commit()
-        flash('Admin rights revoked.', 'success')
-
+    user.is_admin = True if action == 'promote' else False # Toggle admin status
+    db.session.commit()
+    flash(f"User {'promoted to' if user.is_admin else 'demoted from'} admin.", "success")
     return redirect(url_for('admin.controlpanel'))

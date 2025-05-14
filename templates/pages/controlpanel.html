@@ -44,14 +44,14 @@
                         {% if current_user_is_admin %}
                         {% if user.is_admin %}
                         {% if user.name != "Admin" %}
-                        <form method="POST" action="{{ url_for('admin.revoke_admin', user_id=user.id) }}"
+                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='demote') }}"
                             onsubmit="return confirm('Are you sure you want to revoke admin rights from this user?');">
                             <button type="submit" class="blue_btn hover:underline">Revoke Admin</button>
                         </form>
                         {% endif %}
                         {% else %}
                         {% if user.name != "Admin" %}
-                        <form method="POST" action="{{ url_for('admin.make_admin', user_id=user.id) }}"
+                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='promote') }}"
                             onsubmit="return confirm('Are you sure you want to grant admin rights to this user?');">
                             <button type="submit" class="green_btn hover:underline">Make Admin</button>
                         </form>
