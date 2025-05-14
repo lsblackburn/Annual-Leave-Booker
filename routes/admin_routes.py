@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, session, flash,
 from werkzeug.security import generate_password_hash
 from models import db, User, AnnualLeave
 from validation import is_strong_password
-from utilities import admin_required
+from decorators import admin_required
 
 # Create a Blueprint named 'admin' to encapsulate all admin-related routes
 admin = Blueprint('admin', __name__)
