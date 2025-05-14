@@ -6,6 +6,11 @@
 
 {% block body %}
 
+<div class="block mb-8">
+    <h1 class="text-4xl font-bold text-gray-800">Browse your annual leave history</h1>
+    <p class="text-gray-600">Scroll to see your history below</p>
+</div>
+
 <a id="createLeave" href="{{ url_for('leave.create_leave') }}" class="purple_btn block hover:underline">Request
     Leave</a> <!-- Button for the user to book annual leave -->
 
