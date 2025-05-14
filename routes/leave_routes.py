@@ -87,7 +87,7 @@ def approve_leave(leave_id):
     leave.status = 'approved'  # Update the status to 'approved'
     db.session.commit()        # Commit the change to the database
     flash('Leave approved.', 'success')
-    return redirect(url_for('dashboard.dashboard_view'))
+    return redirect(request.referrer) # Redirect to current page
 
 @leave.route('/<int:leave_id>/reject', methods=['POST'])  # Route for rejecting a leave request
 def reject_leave(leave_id):
@@ -103,4 +103,4 @@ def reject_leave(leave_id):
     leave.status = 'rejected'  # Update the status to 'rejected'
     db.session.commit()        # Commit the change to the database
     flash('Leave rejected.', 'success')
-    return redirect(url_for('dashboard.dashboard_view'))
+    return redirect(request.referrer) # Redirect to current page

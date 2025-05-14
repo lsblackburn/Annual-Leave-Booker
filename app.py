@@ -1,5 +1,5 @@
 from flask import Flask, session, g
-from models import db, User
+from models import db, User, AnnualLeave
 from routes.auth_routes import auth
 from routes.leave_routes import leave
 from routes.dashboard_routes import dashboard
@@ -32,6 +32,14 @@ app.register_blueprint(admin)
 @app.before_request
 def load_user():
     g.user = User.query.get(session['user_id']) if 'user_id' in session else None
+
+# Load the pending leave count for admin users before each request
+@app.before_request
+def load_pending_leave():
+    if hasattr(g, 'user') and g.user and g.user.is_admin:
+        g.pending_leave_count = AnnualLeave.query.filter_by(status='pending').count()
+    else:
+        g.pending_leave_count = 0
 
 # Context processor to inject the current user into templates
 @app.context_processor
