@@ -4,7 +4,8 @@ from routes.auth_routes import auth
 from routes.leave_routes import leave
 from routes.dashboard_routes import dashboard
 from routes.admin_routes import admin
-import secrets
+from config import SECRET_KEY
+
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -16,8 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/annual_
 app.config['SESSION_COOKIE_HTTPONLY'] = True # Prevent JavaScript access to session cookie
 app.config['SESSION_COOKIE_SECURE'] = False # Set to True in production to use HTTPS
 
-# Generate a random secret key for securely signing the session cookie
-app.secret_key = secrets.token_hex(16)
+app.config['SECRET_KEY'] = SECRET_KEY
 
 # Initialize the SQLAlchemy database instance with the Flask app
 db.init_app(app)
