@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, session, flash, request
 from werkzeug.security import generate_password_hash
-from models import db, User
+from models import db, User, AnnualLeave
 from validation import is_strong_password
 
 # Create a Blueprint named 'admin' to encapsulate all admin-related routes
@@ -27,7 +27,30 @@ def controlpanel():
         current_user_id=user.id,  # Pass current user's ID
         current_user_is_admin=user.is_admin  # Pass current user's admin status
     )
-
+    
+@admin.route('/pending-leave')  # Route for pending leave requests
+def pending_leave():
+    # Check if the user is logged in
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login')) # Redirect to login page if not logged in
+    # Retrieve the current user from the database
+    user = User.query.get(session['user_id'])
+    
+    # Check if the user is an admin, if not redirect to dashboard
+    if not user.is_admin:
+        flash('Access denied: Administrator privileges are required.', 'error')
+        return redirect(url_for('dashboard.dashboard_view'))
+    
+    # Retrieve all pending leave requests from the database
+    pending_leaves = AnnualLeave.query.filter_by(status='pending').all()
+    # Render the pending leave template with necessary context
+    return render_template(
+        'pages/pending_leave.html',
+        leaves=pending_leaves,  # Pass all pending leave requests to the template
+        current_user_id=user.id,  # Pass current user's ID
+        current_user_is_admin=user.is_admin  # Pass current user's admin status
+    )
+    
 @admin.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])  # Route to edit a user's details
 def edit_user(user_id):
     # Retrieve the current user from the database
