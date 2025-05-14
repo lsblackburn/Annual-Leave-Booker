@@ -15,3 +15,14 @@ def admin_required(f):
 
         return f(user, *args, **kwargs)  # Pass current_user to route
     return decorated_function
+
+def is_main_admin(user):
+    return user.name.lower() == 'admin'
+
+def get_user_or_redirect(user_id, redirect_endpoint='admin.controlpanel'):
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found", "error")
+        return None, redirect(url_for(redirect_endpoint))
+    return user, None
+
