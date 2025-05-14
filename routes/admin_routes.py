@@ -2,10 +2,22 @@ from flask import Blueprint, render_template, redirect, url_for, session, flash,
 from werkzeug.security import generate_password_hash
 from models import db, User, AnnualLeave
 from validation import is_strong_password
-from utilities import admin_required, is_main_admin, get_user_or_redirect
+from utilities import admin_required
 
 # Create a Blueprint named 'admin' to encapsulate all admin-related routes
 admin = Blueprint('admin', __name__)
+
+def is_main_admin(user): # Check if the user is the main admin
+    return user.name.lower() == 'admin'
+
+def get_user_or_redirect(user_id, redirect_endpoint='admin.controlpanel'): # Retrieve a user by ID or redirect if not found
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found", "error")
+        return None, redirect(url_for(redirect_endpoint))
+    return user, None
+
+
 
 @admin.route('/controlpanel') # Route for the admin control panel
 @admin_required  # Decorator to ensure the user is an admin
