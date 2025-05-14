@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import session, redirect, url_for, flash
+from flask import session, redirect, url_for, flash, g
 from models import User
 
 def admin_required(f): # Decorator to check if the user is an admin
@@ -15,3 +15,15 @@ def admin_required(f): # Decorator to check if the user is an admin
 
         return f(user, *args, **kwargs)  # Pass current_user to route
     return decorated_function
+
+def login_required(view):
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+        user_id = session.get('user_id')
+        if user_id is None:
+            flash('Please log in.', 'error')
+            return redirect(url_for('auth.login'))
+
+        g.user = User.query.get(user_id)
+        return view(*args, **kwargs)
+    return wrapped_view
