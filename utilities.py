@@ -2,7 +2,8 @@ from functools import wraps
 from flask import session, redirect, url_for, flash
 from models import User
 
-def admin_required(f):
+
+def admin_required(f): # Decorator to check if the user is an admin
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
@@ -16,10 +17,10 @@ def admin_required(f):
         return f(user, *args, **kwargs)  # Pass current_user to route
     return decorated_function
 
-def is_main_admin(user):
+def is_main_admin(user): # Check if the user is the main admin
     return user.name.lower() == 'admin'
 
-def get_user_or_redirect(user_id, redirect_endpoint='admin.controlpanel'):
+def get_user_or_redirect(user_id, redirect_endpoint='admin.controlpanel'): # Retrieve a user by ID or redirect if not found
     user = User.query.get(user_id)
     if not user:
         flash("User not found", "error")
