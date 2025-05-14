@@ -21,15 +21,15 @@ def controlpanel(current_user):
     
 @admin.route('/pending-leave')  # Route for pending leave requests
 @admin_required
-def pending_leave():
+def pending_leave(current_user):
     # Retrieve all pending leave requests from the database
     pending_leaves = AnnualLeave.query.filter_by(status='pending').all()
     # Render the pending leave template with necessary context
     return render_template(
         'pages/pending_leave.html',
         leaves=pending_leaves,  # Pass all pending leave requests to the template
-        current_user_id=user.id,  # Pass current user's ID
-        current_user_is_admin=user.is_admin  # Pass current user's admin status
+        current_user_id=current_user.id,  # Pass current user's ID
+        current_user_is_admin=current_user.is_admin  # Pass current user's admin status
     )
     
     
