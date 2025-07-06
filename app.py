@@ -1,4 +1,4 @@
-from flask import Flask, session, g
+from flask import Flask, session, g, render_template
 from models import db, User, AnnualLeave
 from routes.auth_routes import auth
 from routes.leave_routes import leave
@@ -45,6 +45,11 @@ def load_pending_leave():
 @app.context_processor
 def inject_user():
     return dict(current_user=g.user)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('pages/404.html'), 404
+
 
 # Entry point for running the application
 if __name__ == '__main__':
