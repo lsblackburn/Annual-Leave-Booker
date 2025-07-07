@@ -20,3 +20,14 @@ $(document).ready(function () {
     });
 
 });
+
+$(document).ready(function() {
+
+    $('input[type="date"]').on('click', function() {
+
+        this.showPicker && this.showPicker();
+        // When clicking on the whole input, show the native date picker
+
+    });
+
+});
