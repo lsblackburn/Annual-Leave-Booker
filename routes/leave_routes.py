@@ -5,7 +5,7 @@ from models import db, AnnualLeave, User
 # Define the 'leave' blueprint with a URL prefix
 leave = Blueprint('leave', __name__, url_prefix='/leave')
 
-@leave.route('/create', methods=['GET', 'POST'])  # Route for creating a new leave request
+@leave.route('/create', methods=['GET', 'POST']) # Route for creating a new leave request
 def create_leave():
     # Check if the user is logged in
     if 'user_id' not in session:
@@ -89,7 +89,7 @@ def approve_leave(leave_id):
     flash('Leave approved.', 'success')
     return redirect(request.referrer) # Redirect to current page
 
-@leave.route('/<int:leave_id>/reject', methods=['POST'])  # Route for rejecting a leave request
+@leave.route('/<int:leave_id>/reject', methods=['POST']) # Route for rejecting a leave request
 def reject_leave(leave_id):
     # Retrieve the current user from the session
     user = User.query.get(session['user_id'])

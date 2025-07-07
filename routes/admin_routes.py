@@ -2,54 +2,49 @@ from flask import Blueprint, render_template, redirect, url_for, session, flash,
 from werkzeug.security import generate_password_hash
 from models import db, User, AnnualLeave
 from validation import is_strong_password
+from decorators import admin_required
 
 # Create a Blueprint named 'admin' to encapsulate all admin-related routes
 admin = Blueprint('admin', __name__)
 
+def is_main_admin(user): # Check if the user is the main admin
+    return user.name.lower() == 'admin'
+
+def get_user_or_redirect(user_id, redirect_endpoint='admin.controlpanel'): # Retrieve a user by ID or redirect if not found
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found", "error")
+        return None, redirect(url_for(redirect_endpoint))
+    return user, None
+
+
+
 @admin.route('/controlpanel') # Route for the admin control panel
-def controlpanel():
-    # Check if the user is logged in
-    if 'user_id' not in session:
-        return redirect(url_for('auth.login')) # Redirect to login page if not logged in
-
-    # Retrieve the current user from the database
-    user = User.query.get(session['user_id'])
-    
-    # Check if the user is an admin, if not redirect to dashboard
-    if not user.is_admin:
-        flash('Access denied: Administrator privileges are required.', 'error')
-        return redirect(url_for('dashboard.dashboard_view'))
-
+@admin_required  # Decorator to ensure the user is an admin
+def controlpanel(current_user):
     # Render the control panel template with necessary context
     return render_template(
         'pages/controlpanel.html',
         users=User.query.all(),  # Pass all users to the template
-        current_user_id=user.id,  # Pass current user's ID
-        current_user_is_admin=user.is_admin  # Pass current user's admin status
+        current_user_id=current_user.id,  # Pass current user's ID
+        current_user_is_admin=current_user.is_admin  # Pass current user's admin status
     )
     
+    
 @admin.route('/pending-leave')  # Route for pending leave requests
-def pending_leave():
-    # Check if the user is logged in
-    if 'user_id' not in session:
-        return redirect(url_for('auth.login')) # Redirect to login page if not logged in
-    # Retrieve the current user from the database
-    user = User.query.get(session['user_id'])
-    
-    # Check if the user is an admin, if not redirect to dashboard
-    if not user.is_admin:
-        flash('Access denied: Administrator privileges are required.', 'error')
-        return redirect(url_for('dashboard.dashboard_view'))
-    
+@admin_required
+def pending_leave(current_user):
     # Retrieve all pending leave requests from the database
     pending_leaves = AnnualLeave.query.filter_by(status='pending').all()
     # Render the pending leave template with necessary context
     return render_template(
         'pages/pending_leave.html',
         leaves=pending_leaves,  # Pass all pending leave requests to the template
-        current_user_id=user.id,  # Pass current user's ID
-        current_user_is_admin=user.is_admin  # Pass current user's admin status
+        current_user_id=current_user.id,  # Pass current user's ID
+        current_user_is_admin=current_user.is_admin  # Pass current user's admin status
     )
+    
+    
     
 @admin.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])  # Route to edit a user's details
 def edit_user(user_id):
@@ -97,9 +92,11 @@ def delete_user(user_id):
         return redirect(url_for('admin.controlpanel'))
 
     # Retrieve the user to be deleted
-    user = User.query.get(user_id)
+    user, response = get_user_or_redirect(user_id)
+    if response:
+        return response
     
-    if user.name.lower() == 'admin':
+    if is_main_admin(user):
         flash('Cannot delete the main admin.', 'error')
         return redirect(url_for('admin.controlpanel'))
     
@@ -112,51 +109,23 @@ def delete_user(user_id):
     return redirect(url_for('admin.controlpanel'))
 
 
-@admin.route('/make_admin/<int:user_id>', methods=['POST'])  # Route to promote a user to admin
-def make_admin(user_id):
-    # Prevent users from modifying their own role
-    if session['user_id'] == user_id:
-        flash('Cannot modify your own role.', 'error')
+# Route to toggle admin status of a user
+@admin.route('/toggle_admin/<int:user_id>/<action>', methods=['POST'])
+@admin_required
+def toggle_admin(current_user, user_id, action):
+    if current_user.id == user_id:
+        flash("Cannot modify your own role.", "error")
         return redirect(url_for('admin.controlpanel'))
 
-    # Retrieve the user to be promoted
-    user = User.query.get(user_id)
-    
-    if user.name.lower() == 'admin':
-        flash('Cannot promote the main admin.', 'error')
-        return redirect(url_for('admin.controlpanel'))
-    
-    if user:
-        # Set the user's admin status to True
-        user.is_admin = True
-        db.session.commit()
-        flash('User promoted to admin.', 'success')
+    user, response = get_user_or_redirect(user_id)
+    if response:
+        return response
 
-    return redirect(url_for('admin.controlpanel'))
-
-
-
-@admin.route('/revoke_admin/<int:user_id>', methods=['POST'])  # Route to revoke a user's admin rights
-def revoke_admin(user_id):
-    # Retrieve the current user from the database
-    current_user = User.query.get(session['user_id'])
-
-    # Check if the current user is an admin and not trying to revoke their own admin rights
-    if not current_user.is_admin or current_user.id == user_id:
-        flash('Permission denied.', 'error')
+    if is_main_admin(user): # Check if the user is the main admin
+        flash("Cannot modify main admin.", "error")
         return redirect(url_for('admin.controlpanel'))
 
-    # Retrieve the user whose admin rights are to be revoked
-    user = User.query.get(user_id)
-    
-    if user.name.lower() == 'admin':
-        flash('Cannot revoke admin rights from the main admin.', 'error')
-        return redirect(url_for('admin.controlpanel'))
-    
-    if user:
-        # Set the user's admin status to False
-        user.is_admin = False
-        db.session.commit()
-        flash('Admin rights revoked.', 'success')
-
+    user.is_admin = True if action == 'promote' else False # Toggle admin status
+    db.session.commit()
+    flash(f"User {'promoted to' if user.is_admin else 'demoted from'} admin.", "success")
     return redirect(url_for('admin.controlpanel'))

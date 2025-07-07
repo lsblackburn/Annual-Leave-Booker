@@ -1,10 +1,11 @@
-from flask import Flask, session, g
+from flask import Flask, session, g, render_template
 from models import db, User, AnnualLeave
 from routes.auth_routes import auth
 from routes.leave_routes import leave
 from routes.dashboard_routes import dashboard
 from routes.admin_routes import admin
-import secrets
+from config import SECRET_KEY
+
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -16,8 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/annual_
 app.config['SESSION_COOKIE_HTTPONLY'] = True # Prevent JavaScript access to session cookie
 app.config['SESSION_COOKIE_SECURE'] = False # Set to True in production to use HTTPS
 
-# Generate a random secret key for securely signing the session cookie
-app.secret_key = secrets.token_hex(16)
+app.config['SECRET_KEY'] = SECRET_KEY
 
 # Initialize the SQLAlchemy database instance with the Flask app
 db.init_app(app)
@@ -45,6 +45,11 @@ def load_pending_leave():
 @app.context_processor
 def inject_user():
     return dict(current_user=g.user)
+
+# Error handler for 404 Not Found
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('pages/404.html'), 404
 
 # Entry point for running the application
 if __name__ == '__main__':
