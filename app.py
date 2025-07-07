@@ -46,10 +46,10 @@ def load_pending_leave():
 def inject_user():
     return dict(current_user=g.user)
 
+# Error handler for 404 Not Found
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('pages/404.html'), 404
-
 
 # Entry point for running the application
 if __name__ == '__main__':
