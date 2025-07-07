@@ -10,7 +10,7 @@ from config import SECRET_KEY
 # Initialize the Flask application
 app = Flask(__name__)
 
-# Configure the SQLite database
+# Configure the mySQL database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/annual_leave_db'
 
 # Enhance session security
@@ -19,7 +19,7 @@ app.config['SESSION_COOKIE_SECURE'] = False # Set to True in production to use H
 
 app.config['SECRET_KEY'] = SECRET_KEY
 
-# Initialize the SQLAlchemy database instance with the Flask app
+# Initialize the mySQL database instance with the Flask app
 db.init_app(app)
 
 # Register blueprints for route management
@@ -28,14 +28,12 @@ app.register_blueprint(dashboard)
 app.register_blueprint(leave)
 app.register_blueprint(admin)
 
-# Load the current user before each request and store in the global object
 @app.before_request
-def load_user():
+def before_every_request():
+    # Load the current user before each request and store in the global object
     g.user = User.query.get(session['user_id']) if 'user_id' in session else None
-
-# Load the pending leave count for admin users before each request
-@app.before_request
-def load_pending_leave():
+    
+    # Load the pending leave count for admin users before each request
     if hasattr(g, 'user') and g.user and g.user.is_admin:
         g.pending_leave_count = AnnualLeave.query.filter_by(status='pending').count()
     else:
