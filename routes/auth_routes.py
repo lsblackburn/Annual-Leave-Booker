@@ -53,7 +53,7 @@ def register():
         db.session.commit()
 
         flash('Registration successful. Please log in.', 'success')
-        return render_template('pages/login.html')
+        return redirect(url_for('auth.login'))
 
     return render_template('pages/register.html')  # Render the registration template
 
