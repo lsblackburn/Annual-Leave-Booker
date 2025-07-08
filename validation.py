@@ -3,7 +3,7 @@ import re
 
 def validate_registration_form(name, email, password, confirm_password):
     if name.strip().lower() == 'admin': # Stops users registering as 'admin'
-        return False, "The name 'Admin' is reserved and cannot be used."
+        return False, "The name Admin is reserved and cannot be used."
 
     if password != confirm_password: # Check if passwords match, if not, return error message
         return False, "Passwords do not match."
