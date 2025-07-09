@@ -28,6 +28,23 @@ test('Booking annual leave end date before start date', async ({ page }) => { //
   await expect(page.getByText('End date cannot be before start date.')).toBeVisible();
 });
 
+test('Updating leave dates', async ({ page }) => { // This test checks if the user can update their annual leave dates successfully
+    await page.getByRole('link', { name: 'Request Leave' }).click();
+    await page.getByRole('textbox', { name: 'Start Date' }).fill('2029-11-22');
+    await page.getByRole('textbox', { name: 'End Date' }).fill('2033-11-24');
+    await page.getByRole('button', { name: 'Submit' }).click();
+    await page.getByRole('button', { name: 'OK' }).click();
+    await page.goto('http://127.0.0.1:5000/your-leaves');
+    await page.getByRole('button', { name: 'Account' }).click();
+    await page.getByRole('link', { name: 'Your annual leave' }).click();
+    await page.getByRole('button', { name: 'Edit' }).first().click();
+    await page.getByRole('textbox', { name: 'Start Date' }).fill('2033-09-15');
+    await page.getByRole('textbox', { name: 'End Date' }).fill('2041-11-14');
+    await page.getByRole('button', { name: 'Submit' }).click();
+    await page.getByRole('button', { name: 'OK' }).click();
+    await expect(page.getByText('Leave updated. Awaiting admin approval.')).toBeVisible();
+});
+
 test.describe('Approving/Rejecting Annual Leave', () => { // This block contains tests that run after a successful login
   
   test.beforeEach(async ({ page }) => { // This function runs before each test to ensure the page is in a clean state
