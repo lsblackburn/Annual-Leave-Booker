@@ -13,7 +13,7 @@ test('Registration success', async ({ page }) => { // This test checks if the us
   await page.getByRole('textbox', { name: 'Enter name' }).fill('Test User');
   await page.getByRole('textbox', { name: 'Enter name' }).press('Tab');
   // Use a unique email for each test run to avoid "Email is already registered" error
-  const uniqueEmail = `testuser_${Date.now()}@example.com`;
+  var uniqueEmail = `testuser_${Date.now()}@example.com`;
   await page.getByRole('textbox', { name: 'Enter email' }).fill(uniqueEmail);
   await page.getByRole('textbox', { name: 'Enter email' }).press('Tab');
   await page.getByRole('textbox', { name: 'Enter password' }).fill('Password123!');
@@ -23,36 +23,6 @@ test('Registration success', async ({ page }) => { // This test checks if the us
   await page.getByRole('button', { name: 'OK' }).click();
   expect(page.url()).toBe('http://127.0.0.1:5000/login'); // After a successful registration, the user should be redirected to the login page
   await expect(page.getByText('Registration successful. Please log in.')).toBeVisible();
-});
-
-test('Registration email conflicts', async ({ page }) => { // This test checks if the registration fails when trying to register as the Admin user
-  await page.goto('http://127.0.0.1:5000/register');
-  await page.getByRole('textbox', { name: 'Enter name' }).click();
-  await page.getByRole('textbox', { name: 'Enter name' }).fill('Name');
-  await page.getByRole('textbox', { name: 'Enter name' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Enter email' }).fill('admin@admin.com');
-  await page.getByRole('textbox', { name: 'Enter email' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Enter password' }).fill('Password123!');
-  await page.getByRole('textbox', { name: 'Enter password' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Enter confirm password' }).fill('Password123!');
-  await page.getByRole('button', { name: 'Create an account' }).click();
-  expect(page.url()).toBe('http://127.0.0.1:5000/register'); // After a successful registration, the user should be redirected to the login page
-  await expect(page.getByText('Email is already registered.')).toBeVisible();
-});
-
-test('Registration for Admin', async ({ page }) => { // This test checks if the registration fails when trying to register as the Admin user
-  await page.goto('http://127.0.0.1:5000/register');
-  await page.getByRole('textbox', { name: 'Enter name' }).click();
-  await page.getByRole('textbox', { name: 'Enter name' }).fill('Admin');
-  await page.getByRole('textbox', { name: 'Enter name' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Enter email' }).fill('admin@admin.com');
-  await page.getByRole('textbox', { name: 'Enter email' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Enter password' }).fill('Password123!');
-  await page.getByRole('textbox', { name: 'Enter password' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Enter confirm password' }).fill('Password123!');
-  await page.getByRole('button', { name: 'Create an account' }).click();
-  expect(page.url()).toBe('http://127.0.0.1:5000/register'); // After a successful registration, the user should be redirected to the login page
-  await expect(page.getByText('The name Admin is reserved and cannot be used.')).toBeVisible();
 });
 
 test('Login fail', async ({ page }) => {
@@ -92,5 +62,55 @@ test.describe('Tests after login', () => { // This block contains tests that run
     expect(page.url()).toBe('http://127.0.0.1:5000/login'); // After logging out, the user should be redirected to the login page
     await expect(page.getByText('You have been logged out.')).toBeVisible();
   });
+
+});
+
+test.describe('Tests registration fails', () => { // This block contains tests that run after a successful login
+  
+  test.beforeEach(async ({ page }) => { // This function runs before each test to ensure the page is in a clean state
+    await page.goto('http://127.0.0.1:5000/register');
+    await page.getByRole('textbox', { name: 'Enter name' }).click();
+  });
+
+  test('Secure password enforcement', async ({ page }) => { // This test checks if the registration fails when trying to register as the Admin user
+    await page.getByRole('textbox', { name: 'Enter name' }).fill('Test User');
+    await page.getByRole('textbox', { name: 'Enter name' }).press('Tab');
+    // Use a unique email for each test run to avoid "Email is already registered" error
+    var uniqueEmail = `testuser_${Date.now()}@example.com`;
+    await page.getByRole('textbox', { name: 'Enter email' }).fill(uniqueEmail);
+    await page.getByRole('textbox', { name: 'Enter email' }).press('Tab');
+    await page.getByRole('textbox', { name: 'Enter password' }).fill('password');
+    await page.getByRole('textbox', { name: 'Enter password' }).press('Tab');
+    await page.getByRole('textbox', { name: 'Enter confirm password' }).fill('password');
+    await page.getByRole('button', { name: 'Create an account' }).click();
+    await expect(page.getByText('Password must contain at least one uppercase letter.')).toBeVisible();
+  });
+
+  test('Registration email conflicts', async ({ page }) => { // This test checks if the registration fails when trying to register as the Admin user
+    await page.getByRole('textbox', { name: 'Enter name' }).fill('Name');
+    await page.getByRole('textbox', { name: 'Enter name' }).press('Tab');
+    await page.getByRole('textbox', { name: 'Enter email' }).fill('admin@admin.com');
+    await page.getByRole('textbox', { name: 'Enter email' }).press('Tab');
+    await page.getByRole('textbox', { name: 'Enter password' }).fill('Password123!');
+    await page.getByRole('textbox', { name: 'Enter password' }).press('Tab');
+    await page.getByRole('textbox', { name: 'Enter confirm password' }).fill('Password123!');
+    await page.getByRole('button', { name: 'Create an account' }).click();
+    expect(page.url()).toBe('http://127.0.0.1:5000/register'); // After a successful registration, the user should be redirected to the login page
+    await expect(page.getByText('Email is already registered.')).toBeVisible();
+  });
+
+  test('Registration for Admin', async ({ page }) => { // This test checks if the registration fails when trying to register as the Admin user
+    await page.getByRole('textbox', { name: 'Enter name' }).fill('Admin');
+    await page.getByRole('textbox', { name: 'Enter name' }).press('Tab');
+    await page.getByRole('textbox', { name: 'Enter email' }).fill('admin@admin.com');
+    await page.getByRole('textbox', { name: 'Enter email' }).press('Tab');
+    await page.getByRole('textbox', { name: 'Enter password' }).fill('Password123!');
+    await page.getByRole('textbox', { name: 'Enter password' }).press('Tab');
+    await page.getByRole('textbox', { name: 'Enter confirm password' }).fill('Password123!');
+    await page.getByRole('button', { name: 'Create an account' }).click();
+    expect(page.url()).toBe('http://127.0.0.1:5000/register'); // After a successful registration, the user should be redirected to the login page
+    await expect(page.getByText('The name Admin is reserved and cannot be used.')).toBeVisible();
+  });
+
 
 });

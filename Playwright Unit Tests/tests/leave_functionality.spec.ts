@@ -28,7 +28,7 @@ test('Booking annual leave end date before start date', async ({ page }) => { //
   await expect(page.getByText('End date cannot be before start date.')).toBeVisible();
 });
 
-test('Updating leave dates', async ({ page }) => { // This test checks if the user can update their annual leave dates successfully
+test('Updating leave dates', async ({ page }) => { // This test checks if the user can update
     await page.getByRole('link', { name: 'Request Leave' }).click();
     await page.getByRole('textbox', { name: 'Start Date' }).fill('2029-11-22');
     await page.getByRole('textbox', { name: 'End Date' }).fill('2033-11-24');
