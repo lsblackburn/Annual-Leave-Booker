@@ -40,24 +40,21 @@
                         {% endif %}
                         {% if user.id != current_user_id %}
                         {% if user.name != "Admin" %}
-                        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}"
-                            onsubmit="return confirm('Are you sure you want to delete this user?');">
-                            <button type="submit" class="red_btn hover:underline">Delete</button>
+                        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" class="delete-user-form confirmation_pop">
+                            <button type="submit" class="red_btn hover:underline delete-user-btn">Delete</button>
                         </form>
                         {% endif %}
 
                         {% if current_user_is_admin %}
                         {% if user.is_admin %}
                         {% if user.name != "Admin" %}
-                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='demote') }}"
-                            onsubmit="return confirm('Are you sure you want to revoke admin rights from this user?');">
+                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='demote') }}" class="revoke-user-form confirmation_pop">
                             <button type="submit" class="blue_btn hover:underline">Revoke Admin</button>
                         </form>
                         {% endif %}
                         {% else %}
                         {% if user.name != "Admin" %}
-                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='promote') }}"
-                            onsubmit="return confirm('Are you sure you want to grant admin rights to this user?');">
+                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='promote') }}" class="promote-user-form confirmation_pop">
                             <button type="submit" class="green_btn hover:underline">Make Admin</button>
                         </form>
                         {% endif %}
