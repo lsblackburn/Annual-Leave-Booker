@@ -18,7 +18,6 @@ def get_user_or_redirect(user_id, redirect_endpoint='admin.controlpanel'): # Ret
     return user, None
 
 
-
 @admin.route('/controlpanel') # Route for the admin control panel
 @admin_required  # Decorator to ensure the user is an admin
 def controlpanel(current_user):
