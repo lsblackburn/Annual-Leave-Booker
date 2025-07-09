@@ -4,14 +4,13 @@ from routes.auth_routes import auth
 from routes.leave_routes import leave
 from routes.dashboard_routes import dashboard
 from routes.admin_routes import admin
-from config import SECRET_KEY
-
+from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI
 
 # Initialize the Flask application
 app = Flask(__name__)
 
 # Configure the mySQL database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/annual_leave_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 # Enhance session security
 app.config['SESSION_COOKIE_HTTPONLY'] = True # Prevent JavaScript access to session cookie

@@ -13,6 +13,7 @@ load_dotenv()
 
 # Access SECRET_KEY
 SECRET_KEY = os.getenv('SECRET_KEY')
+SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
 if not SECRET_KEY:
     # Edge case: .env exists but SECRET_KEY is missing
