@@ -2,6 +2,8 @@
 
 A web-based application to manage and track annual leave for employees and administrators.
 
+<div style="background: #5e3b53; padding: 25px; box-sizing: border-box; border-radius: 25px/25px;">
+
 ### TL:DR
 
 Clone the repository `git@github.com:lsblackburn/Annual-Leave-Booker.git`
@@ -15,6 +17,8 @@ Run the command in the project directory `python app.py` to create the database 
 `python admin_seeder.py` will create the initial Admin user
 
 `python test_seeder.py` will create the testing data
+
+</div>
 
 ## Running the application locally
 
