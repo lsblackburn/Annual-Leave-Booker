@@ -25,6 +25,11 @@ def create_leave():
         if end_date < start_date:
             flash('End date cannot be before start date.', 'error')
             return render_template('pages/create_leave.html')
+        
+        # Validate that the start date is not in the past
+        if start_date < datetime.now():
+            flash('Start date cannot be in the past.', 'error')
+            return render_template('pages/create_leave.html')
 
         # Create a new leave request with 'pending' status
         leave = AnnualLeave(
