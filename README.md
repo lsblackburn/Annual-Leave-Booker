@@ -82,7 +82,7 @@ Once an request has been submitted, regardless of if it is approved users who th
 
 ### Admin Specific
 
-Specific functions are only actionable to Admin users, including the approval and rejection of annual leave.
+Specific functions are only actionable to Admin users, including the [approval and rejection of annual leave](#Annual Leave Approval/Rejection).
 
 Other functionality consist of:
 
