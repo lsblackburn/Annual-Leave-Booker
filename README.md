@@ -135,3 +135,7 @@ Other functionality consist of:
 - **Revoking Admin status** - An Admin can revoke admin status from another Admin. Except from the main admin account which is created from the `admin_seeder.py` file.
 
 - **Deleting users** - An admin can also delete a user from the database through the control panel. Deleting a user will delete all annual leave requests relating to the user through a on cascade.
+
+### Upcoming future features
+
+Currently this project is in a prototype state which means that is usable in a small scale state. In future releases more advanced pagination and filtering options will be available to ensure future scalability for organisations.
