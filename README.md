@@ -1,26 +1,62 @@
 # Annual Leave System
 
+A web-based application to manage and track annual leave for employees and administrators.
+
+### TL:DR
+
+Clone the repository `git@github.com:lsblackburn/Annual-Leave-Booker.git`
+
+Install the dependencies `python pip install -r requirements.txt`
+
+Setup MySQL database through docker ```docker run --name annual_leave_db -e MYSQL_ALLOW_EMPTY_PASSWORD=true -e MYSQL_DATABASE=annual_leave_db -p 3306:3306 -d mysql:8.0```
+
+Run the command in the project directory `python app.py` to create the database tables and start the local server.
+
+`python admin_seeder.py` will create the initial Admin user
+
+`python test_seeder.py` will create the testing data
+
 ## Running the application locally
 
-Start by cloning the repository from Github from the following link https://github.com/lsblackburn/Annual-Leave-Booker
+### Cloning the repository
+
+Github Repository: https://github.com/lsblackburn/Annual-Leave-Booker
+
+Start  by cloning the repository through the following options:
+
+- HTTPS - https://github.com/lsblackburn/Annual-Leave-Booker.git
+
+- SSH - `git@github.com:lsblackburn/Annual-Leave-Booker.git`
+
+- GitHub CLI - `gh repo clone lsblackburn/Annual-Leave-Booker`
+
+### Install the dependencies
 
 Then open a terminal in the project directory and install the necessary dependencies using the following command:
 
+**DISCLAIMER: Ensure Python is installed before running the next command**
+
 `python pip install -r requirements.txt`
+
+### Setting up the MySQL database
 
 From there you will need to setup a mySQL database server. This can be done using Docker and using the command below to create the database:
 
 ```docker run --name annual_leave_db -e MYSQL_ALLOW_EMPTY_PASSWORD=true -e MYSQL_DATABASE=annual_leave_db -p 3306:3306 -d mysql:8.0```
 
-Next you will need to run the following command to start a local server, this will also create the database tables in the database:
+### Starting the application locally
+
+The following command will start the application and generate the database tables:
 
 `python app.py`
 
-It is necessary to populate the application with the Admin user, using the command:
+### Create the initial Admin user
 
 `python admin_seeder.py`
 
-Then you populate the tables with testing data, run the following command:
+### Seeding test data
+
+To populate the tables with test users and annual leave entries, run the following command:
 
 `python test_seeder.py`
 
