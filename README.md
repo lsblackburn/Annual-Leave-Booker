@@ -1,4 +1,4 @@
-# Annual Leave System
+# Annual Leave Booking System
 
 A web-based application to manage and track annual leave for employees and administrators.
 
