@@ -43,8 +43,6 @@ def pending_leave(current_user):
         current_user_is_admin=current_user.is_admin  # Pass current user's admin status
     )
     
-    
-    
 @admin.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])  # Route to edit a user's details
 @admin_required
 def edit_user(user_id):
