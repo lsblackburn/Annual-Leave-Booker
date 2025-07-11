@@ -6,6 +6,9 @@ from routes.dashboard_routes import dashboard
 from routes.admin_routes import admin
 from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI
 
+# Main Flask entry point for the Annual Leave Booker application
+# This file initializes the Flask app, configures the database, and registers all routes.
+
 # Initialize the Flask application
 app = Flask(__name__)
 
@@ -51,5 +54,5 @@ def page_not_found(e):
 # Entry point for running the application
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # Create database tables if they don't exist
+        db.create_all()  # Create database tables if they don't exist (For development only)
     app.run(debug=True)
