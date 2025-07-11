@@ -46,15 +46,18 @@ def pending_leave(current_user):
     
     
 @admin.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])  # Route to edit a user's details
+@admin_required
 def edit_user(user_id):
     # Retrieve the current user from the database
     current_user = User.query.get(session['user_id'])
 
     # Retrieve the user to be edited or return 404 if not found
-    user = User.query.get_or_404(user_id)
+    user, response = get_user_or_redirect(user_id)
+    if response:
+        return response
 
     # Check if the current user has permission to edit users
-    if current_user.name.lower() != 'admin':
+    if is_main_admin(user):
         flash('Permission denied, you cannot edit the main admin.', 'error')
         return redirect(url_for('admin.controlpanel'))
 
@@ -81,6 +84,7 @@ def edit_user(user_id):
 
 
 @admin.route('/user/delete/<int:user_id>', methods=['POST'])  # Route to delete a user
+@admin_required
 def delete_user(user_id):
     # Retrieve the current user from the database
     current_user = User.query.get(session['user_id'])
