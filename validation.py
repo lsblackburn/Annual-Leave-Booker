@@ -56,7 +56,8 @@ def validate_login_form(email, password):
     return False, None
 
 def parse_dates(start_str, end_str):
-    #Parses date strings into datetime objects. Returns (start, end) or (None, None) if invalid.
+    # Parses date strings into datetime objects
+    # Returns (start, end) or (None, None) if invalid.
     try:
         start_date = datetime.strptime(start_str, '%Y-%m-%d')
         end_date = datetime.strptime(end_str, '%Y-%m-%d')
