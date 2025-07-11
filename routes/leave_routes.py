@@ -1,5 +1,11 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, session
 from datetime import datetime
+from validation import (
+    parse_dates,
+    validate_date_order,
+    validate_future_start,
+    validate_user_owns_leave
+)
 from models import db, AnnualLeave, User
 
 # Define the 'leave' blueprint with a URL prefix
@@ -13,22 +19,11 @@ def create_leave():
         return redirect(url_for('auth.login'))
 
     if request.method == 'POST':
-        try:
-            # Parse start and end dates from the form
-            start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
-            end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
-        except ValueError:
-            flash('Invalid date format.', 'error')
+        start_date, end_date = parse_dates(request.form['start_date'], request.form['end_date'])
+        if not start_date or not end_date:
             return render_template('pages/create_leave.html')
 
-        # Validate that the end date is not before the start date
-        if end_date < start_date:
-            flash('End date cannot be before start date.', 'error')
-            return render_template('pages/create_leave.html')
-        
-        # Validate that the start date is not in the past
-        if start_date < datetime.now():
-            flash('Start date cannot be in the past.', 'error')
+        if not validate_date_order(start_date, end_date) or not validate_future_start(start_date):
             return render_template('pages/create_leave.html')
 
         # Create a new leave request with 'pending' status
@@ -51,21 +46,16 @@ def edit_leave(leave_id):
     leave = AnnualLeave.query.get_or_404(leave_id)
     
     # Check if the current user is the one who booked the leave
-    if leave.user_id != session['user_id']:
-        flash('You can only edit your own leave.', 'error')
+    if not validate_user_owns_leave(leave, session['user_id']):
         return redirect(url_for('dashboard.dashboard_view'))
+    
+    if request.method == 'POST': 
+        start_date, end_date = parse_dates(request.form['start_date'], request.form['end_date'])
+        if not start_date or not end_date:
+            return render_template('pages/edit_leave.html')
 
-    if request.method == 'POST':
-        try:
-            start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
-            end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
-        except ValueError:
-            flash('Invalid date format.', 'error')
-            return render_template('pages/edit_leave.html', leave=leave)
-
-        if end_date < start_date:
-            flash('End date cannot be before start date.', 'error')
-            return render_template('pages/edit_leave.html', leave=leave)
+        if not validate_date_order(start_date, end_date) or not validate_future_start(start_date):
+            return render_template('pages/edit_leave.html')
 
         # Update the leave dates and set status to 'pending' for reapproval
         leave.start_date = start_date
@@ -89,8 +79,8 @@ def approve_leave(leave_id):
 
     # Retrieve the leave request by ID or return 404 if not found
     leave = AnnualLeave.query.get_or_404(leave_id)
-    leave.status = 'approved'  # Update the status to 'approved'
-    db.session.commit()        # Commit the change to the database
+    leave.status = 'approved' # Update the status to 'approved'
+    db.session.commit() # Commit the change to the database
     flash('Leave approved.', 'success')
     return redirect(request.referrer) # Redirect to current page
 
@@ -105,7 +95,7 @@ def reject_leave(leave_id):
 
     # Retrieve the leave request by ID or return 404 if not found
     leave = AnnualLeave.query.get_or_404(leave_id)
-    leave.status = 'rejected'  # Update the status to 'rejected'
-    db.session.commit()        # Commit the change to the database
+    leave.status = 'rejected' # Update the status to 'rejected'
+    db.session.commit() # Commit the change to the database
     flash('Leave rejected.', 'success')
     return redirect(request.referrer) # Redirect to current page

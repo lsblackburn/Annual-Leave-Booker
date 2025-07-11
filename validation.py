@@ -1,4 +1,6 @@
 from models import User
+from datetime import datetime
+from flask import flash
 import re
 
 def validate_registration_form(name, email, password, confirm_password):
@@ -31,9 +33,39 @@ def is_strong_password(password): # Function to check if the password is strong
 
     return True, None # If all checks pass, return True
 
-
 def validate_login_form(email, password): # Function to validate login form
     user = User.query.filter_by(email=email, password=password).first() # Check if user exists with the provided email and password
     if user: # If user exists, return True and the user object
         return True, user
     return False, None
+
+def parse_dates(start_str, end_str):
+    #Parses date strings into datetime objects. Returns (start, end) or (None, None) if invalid.
+    try:
+        start_date = datetime.strptime(start_str, '%Y-%m-%d')
+        end_date = datetime.strptime(end_str, '%Y-%m-%d')
+        return start_date, end_date
+    except ValueError:
+        flash('Invalid date format.', 'error')
+        return None, None
+
+def validate_date_order(start_date, end_date):
+    # Validates that end date is after start date.
+    if end_date < start_date:
+        flash('End date cannot be before start date.', 'error')
+        return False
+    return True
+
+def validate_future_start(start_date):
+    # Validates that the start date is not in the past.
+    if start_date < datetime.now():
+        flash('Start date cannot be in the past.', 'error')
+        return False
+    return True
+
+def validate_user_owns_leave(leave, session_user_id):
+    # Checks if the user owns the leave request.
+    if leave.user_id != session_user_id:
+        flash('You can only edit your own leave.', 'error')
+        return False
+    return True
