@@ -10,6 +10,14 @@ Install the dependencies `python pip install -r requirements.txt`
 
 Setup MySQL database through docker ```docker run --name annual_leave_db -e MYSQL_ALLOW_EMPTY_PASSWORD=true -e MYSQL_DATABASE=annual_leave_db -p 3306:3306 -d mysql:8.0```
 
+Make sure to include your database configuration within the `.env` file. If you are running the same commands, these should be your credentials for running locally:
+
+`mysql+pymysql://root:@localhost/annual_leave_db`
+
+You may also need to add a secret_key for encryption, which is also stored within the .env file. Simply place this within it as random string:
+
+`493cccc587385fb623f7d69398451f50b2d9e5cad4c161cba6f79d643b49daba`
+
 Run the command in the project directory `python app.py` to create the database tables and start the local server.
 
 `python admin_seeder.py` will create the initial Admin user
@@ -43,6 +51,10 @@ Then open a terminal in the project directory and install the necessary dependen
 From there you will need to setup a mySQL database server. This can be done using Docker and using the command below to create the database:
 
 ```docker run --name annual_leave_db -e MYSQL_ALLOW_EMPTY_PASSWORD=true -e MYSQL_DATABASE=annual_leave_db -p 3306:3306 -d mysql:8.0```
+
+Make sure to include your database configuration within the `.env` file. If you are running the same commands, these should be your credentials for running locally:
+
+`mysql+pymysql://root:@localhost/annual_leave_db`
 
 ### Starting the application locally
 
