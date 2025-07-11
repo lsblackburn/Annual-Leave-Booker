@@ -27,3 +27,4 @@ def login_required(view): # Decorator to ensure the user is logged in
         g.user = User.query.get(user_id)
         return view(*args, **kwargs)
     return wrapped_view
+
