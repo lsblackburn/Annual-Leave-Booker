@@ -43,18 +43,16 @@ def pending_leave(current_user):
         current_user_is_admin=current_user.is_admin  # Pass current user's admin status
     )
     
-@admin.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])  # Route to edit a user's details
+@admin.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @admin_required
-def edit_user(user_id):
-    # Retrieve the current user from the database
-    current_user = User.query.get(session['user_id'])
-
+def edit_user(current_user, user_id):
+    
     # Retrieve the user to be edited or return 404 if not found
     user, response = get_user_or_redirect(user_id)
     if response:
         return response
 
-    # Check if the current user has permission to edit users
+    # Check if the user being edited is the main admin
     if is_main_admin(user):
         flash('Permission denied, you cannot edit the main admin.', 'error')
         return redirect(url_for('admin.controlpanel'))
@@ -72,18 +70,16 @@ def edit_user(user_id):
                 return render_template('pages/edit_user.html', user=user)
             user.password = generate_password_hash(request.form['password'])
 
-        # Commit the changes to the database
         db.session.commit()
         flash('User updated.', 'success')
         return redirect(url_for('admin.controlpanel'))
 
-    # Render the edit user template with the user's current data
     return render_template('pages/edit_user.html', user=user)
 
 
 @admin.route('/user/delete/<int:user_id>', methods=['POST'])  # Route to delete a user
 @admin_required
-def delete_user(user_id):
+def delete_user(current_user, user_id):
     # Retrieve the current user from the database
     current_user = User.query.get(session['user_id'])
 
