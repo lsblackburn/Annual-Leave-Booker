@@ -56,6 +56,10 @@ Make sure to include your database configuration within the `.env` file. If you 
 
 `mysql+pymysql://root:@localhost/annual_leave_db`
 
+You may also need to add a secret_key for encryption, which is also stored within the .env file. Simply place this within it as random string:
+
+`493cccc587385fb623f7d69398451f50b2d9e5cad4c161cba6f79d643b49daba`
+
 ### Starting the application locally
 
 The following command will start the application and generate the database tables:
