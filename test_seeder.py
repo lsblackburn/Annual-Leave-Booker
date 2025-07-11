@@ -8,6 +8,7 @@ import random
 fake = Faker()
 
 def seed_users():
+    # Create 10 test users with unique emails
     with app.app_context():
         now = datetime.utcnow()
         user_ids = []
@@ -33,6 +34,7 @@ def seed_users():
 
 
 def seed_annual_leave(user_ids, num_leaves=20):
+    # Create random annual leave entries for the seeded users
     with app.app_context():
         statuses = ['pending', 'approved', 'rejected']
 
