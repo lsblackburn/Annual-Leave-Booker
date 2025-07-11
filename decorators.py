@@ -16,7 +16,7 @@ def admin_required(f): # Decorator to check if the user is an admin
         return f(user, *args, **kwargs)  # Pass current_user to route
     return decorated_function
 
-def login_required(view):
+def login_required(view): # Decorator to ensure the user is logged in
     @wraps(view)
     def wrapped_view(*args, **kwargs):
         user_id = session.get('user_id')
