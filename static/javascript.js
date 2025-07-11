@@ -27,3 +27,39 @@ $(document).ready(function() {
         // When clicking on the whole input, show the native date picker
     });
 });
+
+
+$(document).ready(function () { // Handle confirmation popups for user actions for admin control panel
+    $('.confirmation_pop').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        
+        if ($(this).hasClass('delete-user-form')) {
+            var title = 'Are you sure want to delete this user?';
+            var text = "You won't be able to revert this!";
+            var confirmButtonText = 'Yes, delete it!';
+        } else if ($(this).hasClass('revoke-user-form')) {
+            var title = 'Are you sure want to revoke admin rights from this user?';
+            var text = "This is a reversible action!";
+            var confirmButtonText = 'Yes, revoke it!';
+        } else if ($(this).hasClass('promote-user-form')) {
+            var title = 'Are you sure want to promote this user to admin?'; 
+            var text = "This is a reversible action!";
+            var confirmButtonText = 'Yes, promote it!';
+        }
+        
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: confirmButtonText
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});

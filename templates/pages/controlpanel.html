@@ -40,7 +40,7 @@
                         {% endif %}
                         {% if user.id != current_user_id %}
                         {% if user.name != "Admin" %}
-                        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" class="delete-user-form">
+                        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" class="delete-user-form confirmation_pop">
                             <button type="submit" class="red_btn hover:underline delete-user-btn">Delete</button>
                         </form>
                         {% endif %}
@@ -48,13 +48,13 @@
                         {% if current_user_is_admin %}
                         {% if user.is_admin %}
                         {% if user.name != "Admin" %}
-                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='demote') }}" class="revoke-user-form">
+                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='demote') }}" class="revoke-user-form confirmation_pop">
                             <button type="submit" class="blue_btn hover:underline">Revoke Admin</button>
                         </form>
                         {% endif %}
                         {% else %}
                         {% if user.name != "Admin" %}
-                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='promote') }}" class="promote-user-form">
+                        <form method="POST" action="{{ url_for('admin.toggle_admin', user_id=user.id, action='promote') }}" class="promote-user-form confirmation_pop">
                             <button type="submit" class="green_btn hover:underline">Make Admin</button>
                         </form>
                         {% endif %}
