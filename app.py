@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 # Enhance session security
 app.config['SESSION_COOKIE_HTTPONLY'] = True # Prevent JavaScript access to session cookie
-app.config['SESSION_COOKIE_SECURE'] = False # Set to True in production to use HTTPS
+app.config['SESSION_COOKIE_SECURE'] = True # Set to True in production to use HTTPS
 
 app.config['SECRET_KEY'] = SECRET_KEY
 
